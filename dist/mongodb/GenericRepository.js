@@ -27,6 +27,13 @@ var GenericRepository = function () {
     /** @member {string} Operation timeout in ms. */
     this.operationTimeout_ = config.mongoDb.operationTimeout;
 
+    /** @member {Object} The default write concern for CUD operations. */
+    this.commonWriteConcern_ = {
+      "wtimeout": config.mongoDb.operationTimeout,
+      "j": true,
+      "w": "majority"
+    };
+
     /** @member {number} The default timeout for promises in ms */
     this.promiseTimeout_ = config.mongoDb.promiseTimeout;
 
@@ -141,42 +148,62 @@ var GenericRepository = function () {
   }, {
     key: "insertOne",
     value: function insertOne(_ref3) {
+      var _this3 = this;
+
       var collection = _ref3.collection,
           document = _ref3.document;
 
       return this.getMongoDBObject().then(function (db) {
-        return Q.ninvoke(db.collection(collection), "insertOne", document);
-      });
-    }
-  }, {
-    key: "insert",
-    value: function insert(_ref4) {
-      var collection = _ref4.collection,
-          documents = _ref4.documents;
+        return Q.ninvoke(db.collection(collection), "insertOne", document, _this3.commonWriteConcern_);
+      }).timeout(this.promiseTimeout_).then(function (writeResult) {
 
-      return this.getMongoDBObject().then(function (db) {
-        return Q.ninvoke(db.collection(collection), "insert", documents);
+        if (writeResult.result.n === 0) {
+          var err = new Error("Nothing is inserted in db");
+
+          console.error("Nothing is inserted in db when trying to create entity: ", document);
+          throw err;
+        }
+
+        return writeResult.result.n;
       });
     }
   }, {
     key: "update",
-    value: function update(_ref5) {
-      var collection = _ref5.collection,
-          query = _ref5.query,
-          document = _ref5.document;
+    value: function update(_ref4) {
+      var _this4 = this;
+
+      var collection = _ref4.collection,
+          query = _ref4.query,
+          document = _ref4.document;
 
       return this.getMongoDBObject().then(function (db) {
-        return Q.ninvoke(db.collection(collection), "updateOne", query, document);
+        return Q.ninvoke(db.collection(collection), "updateOne", query, document, _this4.commonWriteConcern_);
+      }).timeout(this.promiseTimeout_).then(function (writeResult) {
+
+        if (writeResult.result.n === 0) {
+          console.error("Nothing is updated in db when trying to update document: ", document);
+        }
+
+        return writeResult.result.n;
       });
     }
   }, {
     key: "remove",
-    value: function remove(_ref6) {
-      var collection = _ref6.collection,
-          document = _ref6.document;
+    value: function remove(_ref5) {
+      var _this5 = this;
+
+      var collection = _ref5.collection,
+          document = _ref5.document;
 
       return this.getMongoDBObject().then(function (db) {
-        return Q.ninvoke(db.collection(collection), "deleteOne", document);
+        return Q.ninvoke(db.collection(collection), "deleteOne", document, _this5.commonWriteConcern_);
+      }).timeout(this.promiseTimeout_).then(function (writeResult) {
+
+        if (writeResult.result.n === 0) {
+          console.error("Nothing is deleted from db when trying to delete document: ", document);
+        }
+
+        return writeResult.result.n;
       });
     }
   }]);

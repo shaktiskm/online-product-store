@@ -35,7 +35,7 @@ var ProductService = function () {
           "data": result
         };
 
-        ProductService.successHandler(successResponse, req.Id, res, next);
+        ProductService.successHandler(successResponse, res, next);
       }).catch(function (err) {
         console.log("retrieveProducts()//Error in retrieving products", err);
         ProductService.errorHandler(err, req.id, next);
@@ -58,15 +58,20 @@ var ProductService = function () {
         if (this.validateProductSchema(payload, documentSchema)) {
 
           document = Object.assign(payload, { "_id": uniqueId });
-          this._dbService.insertOne({ collection: collection, document: document }).then(function (success) {
-            console.log("createProduct()//Successfully created product with dbResult", success.result);
+          this._dbService.insertOne({ collection: collection, document: document }).then(function (result) {
             var successResponse = {
               "reqId": req.id,
               "id": uniqueId,
               "status": "success"
             };
 
-            ProductService.successHandler(successResponse, req.Id, res, next);
+            if (result && result === 1) {
+              console.log("createProduct()//Successfully created product in database");
+              ProductService.successHandler(successResponse, res, next);
+            } else {
+              console.log("createProduct()//Error in creating product");
+              ProductService.errorHandler(new Error("DBError"), req.id, next);
+            }
           }).catch(function (err) {
             console.log("createProduct()//Error in creating product", err);
             ProductService.errorHandler(err, req.id, next);
@@ -98,7 +103,7 @@ var ProductService = function () {
           "data": result
         };
 
-        ProductService.successHandler(successResponse, req.Id, res, next);
+        ProductService.successHandler(successResponse, res, next);
       }).catch(function (err) {
         console.log("retrieveProductById()//Error in retrieving product", err);
         ProductService.errorHandler(err, req.id, next);
@@ -120,14 +125,20 @@ var ProductService = function () {
       try {
         if (this.validateProductSchema(payload, documentSchema)) {
           this._dbService.update({ collection: collection, query: query, document: document }).then(function (result) {
-            console.log("updateProductById()//Successfully updated product with id " + productId + " and dbResult modifiedCount", result.modifiedCount);
             var successResponse = {
               "reqId": req.id,
               "id": productId,
               "status": "success"
             };
 
-            ProductService.successHandler(successResponse, req.Id, res, next);
+            if (!result || result === 0) {
+              var apiErr = new ApiError(req.id, 404, "NotFound", "Resource doesn't exist", "");
+
+              return next(apiErr);
+            }
+            console.log("updateProductById()//Successfully updated product of id " + productId);
+
+            ProductService.successHandler(successResponse, res, next);
           }).catch(function (err) {
             console.log("updateProductById()//Error in updating product", err);
             ProductService.errorHandler(err, req.id, next);
@@ -150,14 +161,20 @@ var ProductService = function () {
       };
 
       this._dbService.remove({ collection: collection, document: document }).then(function (result) {
-        console.log("deleteProductById()//Successfully removed product with id " + productId + " and dbResult deletedCount", result.deletedCount);
         var successResponse = {
           "reqId": req.id,
           "id": productId,
           "status": "success"
         };
 
-        ProductService.successHandler(successResponse, req.Id, res, next);
+        if (!result || result === 0) {
+          var apiErr = new ApiError(req.id, 404, "NotFound", "Resource doesn't exist", "");
+
+          return next(apiErr);
+        }
+        console.log("deleteProductById()//Successfully removed product of id " + productId);
+
+        ProductService.successHandler(successResponse, res, next);
       }).catch(function (err) {
         console.log("deleteProductById()//Error in removing product", err);
         ProductService.errorHandler(err, req.id, next);
@@ -179,14 +196,20 @@ var ProductService = function () {
       };
 
       this._dbService.update({ collection: collection, query: query, document: document }).then(function (result) {
-        console.log("addOrRemoveProductQty()//Successfully updated product quantity with id " + productId, result.modifiedCount);
         var successResponse = {
           "reqId": req.id,
           "id": productId,
           "status": "success"
         };
 
-        ProductService.successHandler(successResponse, req.Id, res, next);
+        if (!result || result === 0) {
+          var apiErr = new ApiError(req.id, 404, "NotFound", "Resource doesn't exist", "");
+
+          return next(apiErr);
+        }
+        console.log("addOrRemoveProductQty()//Successfully updated product quantity of id " + productId);
+
+        ProductService.successHandler(successResponse, res, next);
       }).catch(function (err) {
         console.log("addOrRemoveProductQty()//Error in updating product quantity", err);
         ProductService.errorHandler(err, req.id, next);
@@ -194,9 +217,9 @@ var ProductService = function () {
     }
   }], [{
     key: "successHandler",
-    value: function successHandler(data, reqId, res, next) {
+    value: function successHandler(data, res, next) {
       if (!data || Object.keys(data).length === 0) {
-        return next(new ApiError(reqId, 404, "Not Found", "Resource does not exist", ""));
+        return next(new ApiError(data.reqId, 404, "Not Found", "Resource does not exist", ""));
       }
       res.status(200).send(data);
     }

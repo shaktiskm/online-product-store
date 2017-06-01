@@ -19,6 +19,13 @@ class GenericRepository {
     /** @member {string} Operation timeout in ms. */
     this.operationTimeout_ = config.mongoDb.operationTimeout;
 
+    /** @member {Object} The default write concern for CUD operations. */
+    this.commonWriteConcern_ = {
+      "wtimeout": config.mongoDb.operationTimeout,
+      "j": true,
+      "w": "majority"
+    };
+
     /** @member {number} The default timeout for promises in ms */
     this.promiseTimeout_ = config.mongoDb.promiseTimeout;
 
@@ -123,28 +130,51 @@ class GenericRepository {
   insertOne({collection, document}) {
     return this.getMongoDBObject()
       .then(db => {
-        return Q.ninvoke(db.collection(collection), "insertOne", document);
-      });
-  }
+        return Q.ninvoke(db.collection(collection), "insertOne", document, this.commonWriteConcern_);
+      })
+      .timeout(this.promiseTimeout_)
+      .then(writeResult => {
 
-  insert({collection, documents}) {
-    return this.getMongoDBObject()
-      .then(db => {
-        return Q.ninvoke(db.collection(collection), "insert", documents);
+        if (writeResult.result.n === 0) {
+          let err = new Error("Nothing is inserted in db");
+
+          console.error("Nothing is inserted in db when trying to create entity: ", document);
+          throw err;
+        }
+
+        return writeResult.result.n;
       });
   }
 
   update({collection, query, document}) {
     return this.getMongoDBObject()
       .then(db => {
-        return Q.ninvoke(db.collection(collection), "updateOne", query, document);
+        return Q.ninvoke(db.collection(collection), "updateOne", query, document, this.commonWriteConcern_);
+      })
+      .timeout(this.promiseTimeout_)
+      .then(writeResult => {
+
+        if (writeResult.result.n === 0) {
+          console.error("Nothing is updated in db when trying to update document: ", document);
+        }
+
+        return writeResult.result.n;
       });
   }
 
   remove({collection, document}) {
     return this.getMongoDBObject()
       .then(db => {
-        return Q.ninvoke(db.collection(collection), "deleteOne", document);
+        return Q.ninvoke(db.collection(collection), "deleteOne", document, this.commonWriteConcern_);
+      })
+      .timeout(this.promiseTimeout_)
+      .then(writeResult => {
+
+        if (writeResult.result.n === 0) {
+          console.error("Nothing is deleted from db when trying to delete document: ", document);
+        }
+
+        return writeResult.result.n;
       });
   }
 }
