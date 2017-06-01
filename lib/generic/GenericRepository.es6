@@ -184,4 +184,5 @@ function getGenericRepoIns(config) {
   return protectedGenericRepoIns;
 }
 
-module.exports = getGenericRepoIns;
+module.exports = exports = getGenericRepoIns;
+exports.GenericRepository = GenericRepository;

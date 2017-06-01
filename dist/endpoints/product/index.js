@@ -1,11 +1,11 @@
 "use strict";
 
 var express = require("express"),
-    getGenericRepoIns = require("../../mongodb/GenericRepository"),
+    getGenericRepoIns = require("../../generic/GenericRepository"),
     getServiceInstance = require("./ProductService"),
     uuid = require("uuid"),
     isMyJsonValid = require("is-my-json-valid"),
-    getGenericValidatorInstance = require("../../mongodb/GenericValidator"),
+    getGenericValidatorInstance = require("../../generic/GenericValidator"),
     UniqueIdService = require("../../util/UniqueIdService"),
     mwDeletePayloadValidation = require("../../middleware_services/mwDeletePayloadValidation");
 

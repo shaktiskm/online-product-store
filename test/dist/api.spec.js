@@ -15,7 +15,7 @@ describe("******** Testing Express Http Endpoints ********", function () {
     after(function () {
       setTimeout(function () {
         process.exit(1);
-      }, 5000);
+      }, 3000);
     });
 
     it("should return statusCode 200 sucessfully", function (done) {

@@ -13,7 +13,7 @@ describe("******** Testing Express Http Endpoints ********", () => {
     after(() => {
       setTimeout(() => {
         process.exit(1);
-      }, 5000);
+      }, 3000);
     });
 
     it("should return statusCode 200 sucessfully", done => {

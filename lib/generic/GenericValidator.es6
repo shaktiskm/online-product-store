@@ -39,4 +39,5 @@ function getGenericValidatorInstance(...args) {
   return protectedInstance;
 }
 
-module.exports = getGenericValidatorInstance;
+module.exports = exports = getGenericValidatorInstance;
+exports.GenericValidator = GenericValidator;
