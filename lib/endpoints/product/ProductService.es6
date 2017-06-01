@@ -241,4 +241,5 @@ function getServiceInstance(dbService, genericValidator, uniqueIdService) {
   return protectedService;
 }
 
-module.exports = getServiceInstance;
+module.exports = exports = getServiceInstance;
+exports.ProductService = ProductService;
