@@ -49,6 +49,11 @@ Heroku:
 [https://peaceful-peak-90832.herokuapp.com/v1/healthcheck]
 local:
 [http://localhost:8050/v1/healthcheck]
+
+Response
+{
+  "msg": "OK"
+}
 ```
 * To Generate the valid Access Token
 ```
@@ -74,14 +79,15 @@ https://github.com/shaktiskm/online-product-store/blob/master/test_results.txt
 * For Validating the Json payload **is-my-json-valid** [https://www.npmjs.com/package/is-my-json-valid] npm module is used.
 
 * The product routes for Add, Delete, Update and Search are:
-| Http Method| Route
-| :-------   | ----:
-| GET        |/products
-| GET        | /products/:id
-| POST       | /products
-| PUT        | /products/:id
-| DELETE     | /products/:id
-| PATCH      | /products/:id/addRemoveQty
+
+| Http Method | Route
+| :---------- | -------------------------:
+| GET         | /products
+| GET         | /products/:id
+| POST        | /products
+| PUT         | /products/:id
+| DELETE      | /products/:id
+| PATCH       | /products/:id/addRemoveQty
 
  **For more details about the Restful API testing, request, response, refer the doc.**
 [https://github.com/shaktiskm/docs/blob/master/OnlineStore-DesignDocument.docx]
