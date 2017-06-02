@@ -1,0 +1,66 @@
+
+[0m[0m
+[0m  ******** Testing Express Http Endpoints ********[0m
+[0m    ******** when GET /v1/healthcheck is called ********[0m
+    [32m  ✓[0m[90m should return statusCode 200 sucessfully[0m
+    [32m  ✓[0m[90m should return message 'OK' successfully[0m
+
+[0m  ******** The product service unit tests ********[0m
+[0m    ******** The product service constructor ********[0m
+[0m      ******** when it's executed ********[0m
+      [32m  ✓[0m[90m should initialize some static members[0m
+      [32m  ✓[0m[90m should initialize some instance members[0m
+[0m    ******** when "retrieveProducts" method of product service is called ********[0m
+    [32m  ✓[0m[90m should execute read method of dbService[0m
+[0m    ******** when "createProduct" method of product service is called ********[0m
+    [32m  ✓[0m[90m should execute insertOne method of dbService[0m
+[0m    ******** when "retrieveProductById" method of product service is called ********[0m
+    [32m  ✓[0m[90m should execute read method of dbService[0m
+[0m    ******** when "updateProductById" method of product service is called ********[0m
+    [32m  ✓[0m[90m should execute update method of dbService[0m
+[0m    ******** when "deleteProductById" method of product service is called ********[0m
+    [32m  ✓[0m[90m should execute remove method of dbService[0m
+[0m    ******** when "addOrRemoveProductQty" method of product service is called ********[0m
+    [32m  ✓[0m[90m should execute update method of dbService[0m
+
+[0m  ******** The first level authentication ********[0m
+[0m    ******** when valid token is present in request ********[0m
+    [32m  ✓[0m[90m should pass a post request[0m
+    [32m  ✓[0m[90m should pass a put request[0m
+    [32m  ✓[0m[90m should pass a get request[0m
+    [32m  ✓[0m[90m should pass a del request[0m
+[0m    ******** when token is missing in request ********[0m
+    [32m  ✓[0m[90m should fail the post request with statusCode 401[0m
+    [32m  ✓[0m[90m should fail the put request with statusCode 401[0m
+    [32m  ✓[0m[90m should fail the get request with statusCode 401[0m
+    [32m  ✓[0m[90m should fail the del request with statusCode 401[0m
+[0m    ******** when invalid token is present in request ********[0m
+    [32m  ✓[0m[90m should fail the post request with statusCode 401[0m
+    [32m  ✓[0m[90m should fail the put request with statusCode 401[0m
+    [32m  ✓[0m[90m should fail the get request with statusCode 401[0m
+    [32m  ✓[0m[90m should fail the del request with statusCode 401[0m
+[0m    ******** when invalid value of authorization header is present ********[0m
+    [32m  ✓[0m[90m should fail the post request with statusCode 401[0m
+    [32m  ✓[0m[90m should fail the put request with statusCode 401[0m
+    [32m  ✓[0m[90m should fail the get request with statusCode 401[0m
+    [32m  ✓[0m[90m should fail the del request with statusCode 401[0m
+
+[0m  ******** The generic repository unit tests ********[0m
+[0m    ******** The generic repository constructor ********[0m
+[0m      ******** when it's been executed with valid config ********[0m
+      [32m  ✓[0m[90m should have initialized all instance properties succssfully[0m
+[0m      ******** when it's been executed with invalid config ********[0m
+      [32m  ✓[0m[90m should throw an config error[0m
+
+[0m  ******** The generic validator unit tests ********[0m
+[0m    ******** The generic validator constructor ********[0m
+[0m      ******** when it's been executed ********[0m
+      [32m  ✓[0m[90m should deploy a static member called "schemaValidator"[0m
+[0m    ******** when "schemaValidation" method of generic validator is called ********[0m
+[0m      ******** when it's executed ********[0m
+      [32m  ✓[0m[90m should proxy to the json schema validator library[0m
+      [32m  ✓[0m[90m should throw validation error[0m
+
+
+[92m [0m[32m 31 passing[0m[90m (264ms)[0m
+

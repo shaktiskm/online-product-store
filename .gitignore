@@ -1,5 +1,4 @@
 node_modules
-test_results.txt
 npm-debug.log
 .*.swp
 ._*
