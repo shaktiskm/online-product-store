@@ -30,6 +30,9 @@ if (config.environmentVariableChecker.isEnabled) {
 app.set("port", config.http.port);
 app.set("secretKey", config.secretKey);
 
+// Don't generate X-Powered-By response header
+app.disable("x-powered-by");
+
 app.use(mwAllowCrossDomain);
 app.use(bodyparser.json());
 
