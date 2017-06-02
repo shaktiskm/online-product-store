@@ -69,9 +69,9 @@ function MockedNext() {
   };
 }
 
-describe("The product service unit tests ---> ", function () {
-  describe("The product service constructor", function () {
-    describe("when it's executed", function () {
+describe("******** The product service unit tests ********", function () {
+  describe("******** The product service constructor ********", function () {
+    describe("******** when it's executed ********", function () {
       it("should initialize some static members", function () {
         expect(Boolean(ProductService.UniqueIdService)).to.be.true;
         expect(Boolean(ProductService.genericValidator)).to.be.true;
@@ -88,7 +88,7 @@ describe("The product service unit tests ---> ", function () {
     });
   });
 
-  describe("when \"retrieveProducts\" method of product service is called", function () {
+  describe("******** when \"retrieveProducts\" method of product service is called ********", function () {
     var service = void 0,
         req = void 0,
         res = void 0,
@@ -107,7 +107,7 @@ describe("The product service unit tests ---> ", function () {
     });
   });
 
-  describe("when \"createProduct\" method of product service is called", function () {
+  describe("******** when \"createProduct\" method of product service is called ********", function () {
     var service = void 0,
         req = void 0,
         res = void 0,
@@ -130,7 +130,7 @@ describe("The product service unit tests ---> ", function () {
     });
   });
 
-  describe("when \"retrieveProductById\" method of product service is called", function () {
+  describe("******** when \"retrieveProductById\" method of product service is called ********", function () {
     var service = void 0,
         req = void 0,
         res = void 0,
@@ -154,7 +154,7 @@ describe("The product service unit tests ---> ", function () {
     });
   });
 
-  describe("when \"updateProductById\" method of product service is called", function () {
+  describe("******** when \"updateProductById\" method of product service is called ********", function () {
     var service = void 0,
         req = void 0,
         res = void 0,
@@ -180,7 +180,7 @@ describe("The product service unit tests ---> ", function () {
     });
   });
 
-  describe("when \"deleteProductById\" method of product service is called", function () {
+  describe("******** when \"deleteProductById\" method of product service is called ********", function () {
     var service = void 0,
         req = void 0,
         res = void 0,
@@ -204,7 +204,7 @@ describe("The product service unit tests ---> ", function () {
     });
   });
 
-  describe("when \"addOrRemoveProductQty\" method of product service is called", function () {
+  describe("******** when \"addOrRemoveProductQty\" method of product service is called ********", function () {
     var service = void 0,
         req = void 0,
         res = void 0,

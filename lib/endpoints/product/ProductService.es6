@@ -5,8 +5,9 @@ let protectedService;
 
 class ProductService {
 
-  constructor(dbService, genericValidator, uniqueIdService) {
+  constructor(dbService, genericValidator, uniqueIdService, logger) {
     this._dbService = dbService;
+    this._logger = logger;
     ProductService.UniqueIdService = uniqueIdService;
     ProductService.genericValidator = genericValidator;
     ProductService.collection = "products";
@@ -34,7 +35,7 @@ class ProductService {
     this._dbService
       .read({collection, query})
       .then(result => {
-        console.log("retrieveProducts()//Successfully retrieved products");
+        this._logger.info("retrieveProducts()//Successfully retrieved products");
         let successResponse = {
           "reqId": req.id,
           "status": "success",
@@ -44,7 +45,7 @@ class ProductService {
         ProductService.successHandler(successResponse, res, next);
       })
       .catch(err => {
-        console.log("retrieveProducts()//Error in retrieving products", err);
+        this._logger.error("retrieveProducts()//Error in retrieving products", err);
         ProductService.errorHandler(err, req.id, next);
       });
   }
@@ -73,22 +74,22 @@ class ProductService {
             };
 
             if (result && result === 1) {
-              console.log("createProduct()//Successfully created product in database");
+              this._logger.info("createProduct()//Successfully created product in database");
               ProductService.successHandler(successResponse, res, next);
             } else {
-              console.log("createProduct()//Error in creating product");
+              this._logger.info("createProduct()//Error in creating product");
               ProductService.errorHandler(new Error("DBError"), req.id, next);
             }
           })
           .catch(err => {
-            console.log("createProduct()//Error in creating product", err);
+            this._logger.error("createProduct()//Error in creating product", err);
             ProductService.errorHandler(err, req.id, next);
           });
       }
     } catch (err) {
       let apiErr = new ApiError(req.id, 400, "ValidationError", "Bad Request", err);
 
-      console.log("createProduct()//Error in validating schema ...", err);
+      this._logger.error("createProduct()//Error in validating schema ...", err);
       return next(apiErr);
     }
   }
@@ -105,7 +106,7 @@ class ProductService {
     this._dbService
       .read({collection, query})
       .then(result => {
-        console.log(`retrieveProductById()//Successfully retrieved product with id ${productId}`, result);
+        this._logger.info(`retrieveProductById()//Successfully retrieved product with id ${productId}`, result);
         let successResponse = {
           "reqId": req.id,
           "status": "success",
@@ -115,7 +116,7 @@ class ProductService {
         ProductService.successHandler(successResponse, res, next);
       })
       .catch(err => {
-        console.log("retrieveProductById()//Error in retrieving product", err);
+        this._logger.error("retrieveProductById()//Error in retrieving product", err);
         ProductService.errorHandler(err, req.id, next);
       });
   }
@@ -147,19 +148,19 @@ class ProductService {
 
               return next(apiErr);
             }
-            console.log(`updateProductById()//Successfully updated product of id ${productId}`);
+            this._logger.info(`updateProductById()//Successfully updated product of id ${productId}`);
 
             ProductService.successHandler(successResponse, res, next);
           })
           .catch(err => {
-            console.log("updateProductById()//Error in updating product", err);
+            this._logger.error("updateProductById()//Error in updating product", err);
             ProductService.errorHandler(err, req.id, next);
           });
       }
     } catch (err) {
       let apiErr = new ApiError(req.id, 400, "ValidationError", "Bad Request", err);
 
-      console.log("updateProductById()//Error in validating schema ...", err);
+      this._logger.error("updateProductById()//Error in validating schema ...", err);
       return next(apiErr);
     }
   }
@@ -185,12 +186,12 @@ class ProductService {
 
           return next(apiErr);
         }
-        console.log(`deleteProductById()//Successfully removed product of id ${productId}`);
+        this._logger.info(`deleteProductById()//Successfully removed product of id ${productId}`);
 
         ProductService.successHandler(successResponse, res, next);
       })
       .catch(err => {
-        console.log("deleteProductById()//Error in removing product", err);
+        this._logger.error("deleteProductById()//Error in removing product", err);
         ProductService.errorHandler(err, req.id, next);
       });
 
@@ -223,12 +224,12 @@ class ProductService {
 
           return next(apiErr);
         }
-        console.log(`addOrRemoveProductQty()//Successfully updated product quantity of id ${productId}`);
+        this._logger.info(`addOrRemoveProductQty()//Successfully updated product quantity of id ${productId}`);
 
         ProductService.successHandler(successResponse, res, next);
       })
       .catch(err => {
-        console.log("addOrRemoveProductQty()//Error in updating product quantity", err);
+        this._logger.error("addOrRemoveProductQty()//Error in updating product quantity", err);
         ProductService.errorHandler(err, req.id, next);
       });
   }
@@ -236,8 +237,8 @@ class ProductService {
 }
 
 
-function getServiceInstance(dbService, genericValidator, uniqueIdService) {
-  protectedService = protectedService || new ProductService(dbService, genericValidator, uniqueIdService);
+function getServiceInstance(dbService, genericValidator, uniqueIdService, logger) {
+  protectedService = protectedService || new ProductService(dbService, genericValidator, uniqueIdService, logger);
   return protectedService;
 }
 

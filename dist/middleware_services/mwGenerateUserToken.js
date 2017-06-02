@@ -1,7 +1,8 @@
 "use strict";
 
 var JWT = require("../util/JWTImplementaion"),
-    ApiError = require("../util/apiError");
+    ApiError = require("../util/apiError"),
+    log = require("../util/ApiLogger");
 
 function mwGenerateUserToken(req, res, next) {
   var secret = req.app.get("secretKey"),
@@ -14,7 +15,7 @@ function mwGenerateUserToken(req, res, next) {
   };
 
   if (!payload.userId) {
-    console.error("mwAuthenticateRequest()//Unable to generate the token");
+    log.error("mwAuthenticateRequest()//Unable to generate the token");
     return next(new ApiError(req.id, 400, "Bad Request", "Token Generation Failed because of userId", ""));
   }
 
@@ -25,7 +26,7 @@ function mwGenerateUserToken(req, res, next) {
   try {
     token = jwtInstance.sign(payloadData, options);
 
-    console.log("mwAuthenticateRequest()//Authentication Token generated successfully", token);
+    log.info("mwAuthenticateRequest()//Authentication Token generated successfully", token);
     var successResponse = {
       "reqId": req.id,
       "token": token,
@@ -34,7 +35,7 @@ function mwGenerateUserToken(req, res, next) {
 
     res.status(200).send(successResponse);
   } catch (err) {
-    console.error("mwAuthenticateRequest()//Unable to generate the token", err);
+    log.error("mwAuthenticateRequest()//Unable to generate the token", err);
     return next(new ApiError(req.id, 400, "Bad Request", "Token Generation Failed", ""));
   }
 }

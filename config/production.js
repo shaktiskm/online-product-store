@@ -10,6 +10,19 @@ var environmentVariables = require("./environmentVariables"),
       "port": environmentVariables.STORE_PORT
     },
     "appName": "online-product-store",
+    "logger": {
+      "name": "online-product-store",
+      "streams": [
+        {
+          "level": environmentVariables.STORE_LOGGER,
+          "stream": process.stdout
+        },
+        {
+          "level": "error",
+          "path": "/var/log/online-store-error.log"
+        }
+      ]
+    },
     "mongoDb": {
       "connectionString": environmentVariables.STORE_MONGO_CONNECTION_STRING,
       "operationTimeout": 4000,

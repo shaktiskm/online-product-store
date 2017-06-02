@@ -14,10 +14,6 @@ var environmentVariables = require("./environmentVariables"),
       "name": "online-product-store",
       "streams": [
         {
-          "level": environmentVariables.STORE_LOGGER,
-          "stream": process.stdout
-        },
-        {
           "level": "error",
           "path": "/var/log/online-store-error.log"
         }

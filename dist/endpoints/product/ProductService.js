@@ -10,10 +10,11 @@ var ApiError = require("../../util/apiError"),
 var protectedService = void 0;
 
 var ProductService = function () {
-  function ProductService(dbService, genericValidator, uniqueIdService) {
+  function ProductService(dbService, genericValidator, uniqueIdService, logger) {
     _classCallCheck(this, ProductService);
 
     this._dbService = dbService;
+    this._logger = logger;
     ProductService.UniqueIdService = uniqueIdService;
     ProductService.genericValidator = genericValidator;
     ProductService.collection = "products";
@@ -22,13 +23,15 @@ var ProductService = function () {
   _createClass(ProductService, [{
     key: "retrieveProducts",
     value: function retrieveProducts(req, res, next) {
+      var _this = this;
+
       var collection = ProductService.collection,
           query = {
         "body": {}
       };
 
       this._dbService.read({ collection: collection, query: query }).then(function (result) {
-        console.log("retrieveProducts()//Successfully retrieved products");
+        _this._logger.info("retrieveProducts()//Successfully retrieved products");
         var successResponse = {
           "reqId": req.id,
           "status": "success",
@@ -37,7 +40,7 @@ var ProductService = function () {
 
         ProductService.successHandler(successResponse, res, next);
       }).catch(function (err) {
-        console.log("retrieveProducts()//Error in retrieving products", err);
+        _this._logger.error("retrieveProducts()//Error in retrieving products", err);
         ProductService.errorHandler(err, req.id, next);
       });
     }
@@ -49,6 +52,8 @@ var ProductService = function () {
   }, {
     key: "createProduct",
     value: function createProduct(req, res, next) {
+      var _this2 = this;
+
       var collection = ProductService.collection,
           payload = req.body,
           uniqueId = ProductService.UniqueIdService.createUniqueId(),
@@ -66,27 +71,29 @@ var ProductService = function () {
             };
 
             if (result && result === 1) {
-              console.log("createProduct()//Successfully created product in database");
+              _this2._logger.info("createProduct()//Successfully created product in database");
               ProductService.successHandler(successResponse, res, next);
             } else {
-              console.log("createProduct()//Error in creating product");
+              _this2._logger.info("createProduct()//Error in creating product");
               ProductService.errorHandler(new Error("DBError"), req.id, next);
             }
           }).catch(function (err) {
-            console.log("createProduct()//Error in creating product", err);
+            _this2._logger.error("createProduct()//Error in creating product", err);
             ProductService.errorHandler(err, req.id, next);
           });
         }
       } catch (err) {
         var apiErr = new ApiError(req.id, 400, "ValidationError", "Bad Request", err);
 
-        console.log("createProduct()//Error in validating schema ...", err);
+        this._logger.error("createProduct()//Error in validating schema ...", err);
         return next(apiErr);
       }
     }
   }, {
     key: "retrieveProductById",
     value: function retrieveProductById(req, res, next) {
+      var _this3 = this;
+
       var collection = ProductService.collection,
           productId = req.params.id,
           query = {
@@ -96,7 +103,7 @@ var ProductService = function () {
       };
 
       this._dbService.read({ collection: collection, query: query }).then(function (result) {
-        console.log("retrieveProductById()//Successfully retrieved product with id " + productId, result);
+        _this3._logger.info("retrieveProductById()//Successfully retrieved product with id " + productId, result);
         var successResponse = {
           "reqId": req.id,
           "status": "success",
@@ -105,13 +112,15 @@ var ProductService = function () {
 
         ProductService.successHandler(successResponse, res, next);
       }).catch(function (err) {
-        console.log("retrieveProductById()//Error in retrieving product", err);
+        _this3._logger.error("retrieveProductById()//Error in retrieving product", err);
         ProductService.errorHandler(err, req.id, next);
       });
     }
   }, {
     key: "updateProductById",
     value: function updateProductById(req, res, next) {
+      var _this4 = this;
+
       var collection = ProductService.collection,
           productId = req.params.id,
           payload = req.body,
@@ -136,24 +145,26 @@ var ProductService = function () {
 
               return next(apiErr);
             }
-            console.log("updateProductById()//Successfully updated product of id " + productId);
+            _this4._logger.info("updateProductById()//Successfully updated product of id " + productId);
 
             ProductService.successHandler(successResponse, res, next);
           }).catch(function (err) {
-            console.log("updateProductById()//Error in updating product", err);
+            _this4._logger.error("updateProductById()//Error in updating product", err);
             ProductService.errorHandler(err, req.id, next);
           });
         }
       } catch (err) {
         var apiErr = new ApiError(req.id, 400, "ValidationError", "Bad Request", err);
 
-        console.log("updateProductById()//Error in validating schema ...", err);
+        this._logger.error("updateProductById()//Error in validating schema ...", err);
         return next(apiErr);
       }
     }
   }, {
     key: "deleteProductById",
     value: function deleteProductById(req, res, next) {
+      var _this5 = this;
+
       var collection = ProductService.collection,
           productId = req.params.id,
           document = {
@@ -172,17 +183,19 @@ var ProductService = function () {
 
           return next(apiErr);
         }
-        console.log("deleteProductById()//Successfully removed product of id " + productId);
+        _this5._logger.info("deleteProductById()//Successfully removed product of id " + productId);
 
         ProductService.successHandler(successResponse, res, next);
       }).catch(function (err) {
-        console.log("deleteProductById()//Error in removing product", err);
+        _this5._logger.error("deleteProductById()//Error in removing product", err);
         ProductService.errorHandler(err, req.id, next);
       });
     }
   }, {
     key: "addOrRemoveProductQty",
     value: function addOrRemoveProductQty(req, res, next) {
+      var _this6 = this;
+
       var collection = ProductService.collection,
           productId = req.params.id,
           payload = req.body,
@@ -207,11 +220,11 @@ var ProductService = function () {
 
           return next(apiErr);
         }
-        console.log("addOrRemoveProductQty()//Successfully updated product quantity of id " + productId);
+        _this6._logger.info("addOrRemoveProductQty()//Successfully updated product quantity of id " + productId);
 
         ProductService.successHandler(successResponse, res, next);
       }).catch(function (err) {
-        console.log("addOrRemoveProductQty()//Error in updating product quantity", err);
+        _this6._logger.error("addOrRemoveProductQty()//Error in updating product quantity", err);
         ProductService.errorHandler(err, req.id, next);
       });
     }
@@ -235,8 +248,8 @@ var ProductService = function () {
   return ProductService;
 }();
 
-function getServiceInstance(dbService, genericValidator, uniqueIdService) {
-  protectedService = protectedService || new ProductService(dbService, genericValidator, uniqueIdService);
+function getServiceInstance(dbService, genericValidator, uniqueIdService, logger) {
+  protectedService = protectedService || new ProductService(dbService, genericValidator, uniqueIdService, logger);
   return protectedService;
 }
 

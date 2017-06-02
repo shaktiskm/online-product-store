@@ -19,10 +19,7 @@ class GenericValidator {
    */
   schemaValidation(payload, schema) {
 
-    let validate;
-
-    console.log("GenericValidator.schemaValidation()//Validating payload: ", payload);
-    validate = GenericValidator.schemaValidator(schema);
+    let validate = GenericValidator.schemaValidator(schema);
 
     if (validate(payload)) {
       return true;

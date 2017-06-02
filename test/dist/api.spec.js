@@ -7,13 +7,17 @@ var expect = require("chai").expect,
 describe("******** Testing Express Http Endpoints ********", function () {
 
   describe("******** when GET /v1/healthcheck is called ********", function () {
+    var NODE_ENV = void 0;
 
     before(function () {
+      NODE_ENV = process.env.NODE_ENV;
+      process.env.NODE_ENV = "test";
       require("../../dist/api");
     });
 
     after(function () {
       setTimeout(function () {
+        process.env.NODE_ENV = NODE_ENV;
         process.exit(1);
       }, 3000);
     });

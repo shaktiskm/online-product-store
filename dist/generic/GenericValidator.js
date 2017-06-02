@@ -32,10 +32,7 @@ var GenericValidator = function () {
     key: "schemaValidation",
     value: function schemaValidation(payload, schema) {
 
-      var validate = void 0;
-
-      console.log("GenericValidator.schemaValidation()//Validating payload: ", payload);
-      validate = GenericValidator.schemaValidator(schema);
+      var validate = GenericValidator.schemaValidator(schema);
 
       if (validate(payload)) {
         return true;

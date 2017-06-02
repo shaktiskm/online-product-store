@@ -51,9 +51,9 @@ function MockedNext() {
   };
 }
 
-describe("The product service unit tests ---> ", () => {
-  describe("The product service constructor", () => {
-    describe("when it's executed", () => {
+describe("******** The product service unit tests ********", () => {
+  describe("******** The product service constructor ********", () => {
+    describe("******** when it's executed ********", () => {
       it("should initialize some static members", () => {
         expect(Boolean(ProductService.UniqueIdService)).to.be.true;
         expect(Boolean(ProductService.genericValidator)).to.be.true;
@@ -70,7 +70,7 @@ describe("The product service unit tests ---> ", () => {
     });
   });
 
-  describe("when \"retrieveProducts\" method of product service is called", () => {
+  describe("******** when \"retrieveProducts\" method of product service is called ********", () => {
     let service,
       req,
       res,
@@ -89,7 +89,7 @@ describe("The product service unit tests ---> ", () => {
     });
   });
 
-  describe("when \"createProduct\" method of product service is called", () => {
+  describe("******** when \"createProduct\" method of product service is called ********", () => {
     let service,
       req,
       res,
@@ -112,7 +112,7 @@ describe("The product service unit tests ---> ", () => {
     });
   });
 
-  describe("when \"retrieveProductById\" method of product service is called", () => {
+  describe("******** when \"retrieveProductById\" method of product service is called ********", () => {
     let service,
       req,
       res,
@@ -136,7 +136,7 @@ describe("The product service unit tests ---> ", () => {
     });
   });
 
-  describe("when \"updateProductById\" method of product service is called", () => {
+  describe("******** when \"updateProductById\" method of product service is called ********", () => {
     let service,
       req,
       res,
@@ -162,7 +162,7 @@ describe("The product service unit tests ---> ", () => {
     });
   });
 
-  describe("when \"deleteProductById\" method of product service is called", () => {
+  describe("******** when \"deleteProductById\" method of product service is called ********", () => {
     let service,
       req,
       res,
@@ -186,7 +186,7 @@ describe("The product service unit tests ---> ", () => {
     });
   });
 
-  describe("when \"addOrRemoveProductQty\" method of product service is called", () => {
+  describe("******** when \"addOrRemoveProductQty\" method of product service is called ********", () => {
     let service,
       req,
       res,

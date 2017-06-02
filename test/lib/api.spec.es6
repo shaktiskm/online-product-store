@@ -5,13 +5,17 @@ const expect = require("chai").expect,
 describe("******** Testing Express Http Endpoints ********", () => {
 
   describe("******** when GET /v1/healthcheck is called ********", () => {
+    let NODE_ENV;
 
     before(() => {
+      NODE_ENV = process.env.NODE_ENV;
+      process.env.NODE_ENV = "test";
       require("../../dist/api");
     });
 
     after(() => {
       setTimeout(() => {
+        process.env.NODE_ENV = NODE_ENV;
         process.exit(1);
       }, 3000);
     });

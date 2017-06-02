@@ -1,6 +1,6 @@
-
 const JWT = require("../util/JWTImplementaion"),
-  ApiError = require("../util/apiError");
+  ApiError = require("../util/apiError"),
+  log = require("../util/ApiLogger");
 
 function mwAuthenticateRequest(req, res, next) {
 
@@ -13,12 +13,12 @@ function mwAuthenticateRequest(req, res, next) {
     token = req.header("Authorization");
 
   if (!config.authorization.authorize) {
-    console.log("mwAuthenticateRequest()//Authentication is disabled by configuration...");
+    log.info("mwAuthenticateRequest()//Authentication is disabled by configuration...");
     return next();
   }
 
   if (!token || !tokenRegex.test(token)) {
-    console.log("mwAuthenticateRequest()//Authentication credentials were missing or incorrect.");
+    log.error("mwAuthenticateRequest()//Authentication credentials were missing or incorrect.");
     let err = new ApiError(req.id, 401, "Unauthorized", "Authentication credentials missing or incorrect", "");
 
     return next(err);
@@ -29,12 +29,12 @@ function mwAuthenticateRequest(req, res, next) {
   jwtInstance
     .verifyToken(token)
     .then(data => {
-      console.log("mwAuthenticateRequest()//Authentication Token verification done successfully", data);
+      log.info("mwAuthenticateRequest()//Authentication Token verification done successfully", data);
       req.user = data;
       return next();
 
     }, failure => {
-      console.error("mwAuthenticateRequest()//Unable to verify the supplied token", failure);
+      log.error("mwAuthenticateRequest()//Unable to verify the supplied token", failure);
       return next(new ApiError(req.id, 401, "Unauthorized", "Authentication credentials missing or incorrect", ""));
     });
 }

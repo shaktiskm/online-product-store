@@ -5,10 +5,13 @@ let protectedGenericRepoIns;
 
 class GenericRepository {
 
-  constructor(config) {
+  constructor(config, logger) {
     if (!config || !config.mongoDb.connectionString) {
       throw new Error("MongoDB connection string not available");
     }
+
+    /** @member {Object} logger object */
+    this.logger = logger;
 
     /** @member {string} Connection string to database. */
     this.connectionString_ = config.mongoDb.connectionString;
@@ -39,7 +42,7 @@ class GenericRepository {
    * @returns {Q.Promise} A promise which resolves the connection to the mongodb client.
    */
   connectToDB() {
-    console.log("Connecting to db with options: ", this.connectionString_);
+    this.logger.info("Connecting to db with options: ", this.connectionString_);
     this.dbConnection_ = Q.ninvoke(MongoClient, "connect", this.connectionString_, this.connectionOptions_);
     return this.dbConnection_;
   }
@@ -53,7 +56,7 @@ class GenericRepository {
     return this.dbConnection_
       .timeout(this.promiseTimeout_)
       .catch(err => {
-        console.error(" MongoDB connection is not available", err);
+        this.logger.error(" MongoDB connection is not available", err);
         return this.connectToDB();
       })
       .then(dbConn => {
@@ -138,7 +141,7 @@ class GenericRepository {
         if (writeResult.result.n === 0) {
           let err = new Error("Nothing is inserted in db");
 
-          console.error("Nothing is inserted in db when trying to create entity: ", document);
+          this.logger.error("Nothing is inserted in db when trying to create entity: ", document);
           throw err;
         }
 
@@ -155,7 +158,7 @@ class GenericRepository {
       .then(writeResult => {
 
         if (writeResult.result.n === 0) {
-          console.error("Nothing is updated in db when trying to update document: ", document);
+          this.logger.error("Nothing is updated in db when trying to update document: ", document);
         }
 
         return writeResult.result.n;
@@ -171,7 +174,7 @@ class GenericRepository {
       .then(writeResult => {
 
         if (writeResult.result.n === 0) {
-          console.error("Nothing is deleted from db when trying to delete document: ", document);
+          this.logger.error("Nothing is deleted from db when trying to delete document: ", document);
         }
 
         return writeResult.result.n;
@@ -179,8 +182,8 @@ class GenericRepository {
   }
 }
 
-function getGenericRepoIns(config) {
-  protectedGenericRepoIns = protectedGenericRepoIns || new GenericRepository(config);
+function getGenericRepoIns(config, logger) {
+  protectedGenericRepoIns = protectedGenericRepoIns || new GenericRepository(config, logger);
   return protectedGenericRepoIns;
 }
 

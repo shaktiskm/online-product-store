@@ -11,12 +11,15 @@ var _require = require("mongodb"),
 var protectedGenericRepoIns = void 0;
 
 var GenericRepository = function () {
-  function GenericRepository(config) {
+  function GenericRepository(config, logger) {
     _classCallCheck(this, GenericRepository);
 
     if (!config || !config.mongoDb.connectionString) {
       throw new Error("MongoDB connection string not available");
     }
+
+    /** @member {Object} logger object */
+    this.logger = logger;
 
     /** @member {string} Connection string to database. */
     this.connectionString_ = config.mongoDb.connectionString;
@@ -51,7 +54,7 @@ var GenericRepository = function () {
   _createClass(GenericRepository, [{
     key: "connectToDB",
     value: function connectToDB() {
-      console.log("Connecting to db with options: ", this.connectionString_);
+      this.logger.info("Connecting to db with options: ", this.connectionString_);
       this.dbConnection_ = Q.ninvoke(MongoClient, "connect", this.connectionString_, this.connectionOptions_);
       return this.dbConnection_;
     }
@@ -67,7 +70,7 @@ var GenericRepository = function () {
       var _this = this;
 
       return this.dbConnection_.timeout(this.promiseTimeout_).catch(function (err) {
-        console.error(" MongoDB connection is not available", err);
+        _this.logger.error(" MongoDB connection is not available", err);
         return _this.connectToDB();
       }).then(function (dbConn) {
         return dbConn;
@@ -160,7 +163,7 @@ var GenericRepository = function () {
         if (writeResult.result.n === 0) {
           var err = new Error("Nothing is inserted in db");
 
-          console.error("Nothing is inserted in db when trying to create entity: ", document);
+          _this3.logger.error("Nothing is inserted in db when trying to create entity: ", document);
           throw err;
         }
 
@@ -181,7 +184,7 @@ var GenericRepository = function () {
       }).timeout(this.promiseTimeout_).then(function (writeResult) {
 
         if (writeResult.result.n === 0) {
-          console.error("Nothing is updated in db when trying to update document: ", document);
+          _this4.logger.error("Nothing is updated in db when trying to update document: ", document);
         }
 
         return writeResult.result.n;
@@ -200,7 +203,7 @@ var GenericRepository = function () {
       }).timeout(this.promiseTimeout_).then(function (writeResult) {
 
         if (writeResult.result.n === 0) {
-          console.error("Nothing is deleted from db when trying to delete document: ", document);
+          _this5.logger.error("Nothing is deleted from db when trying to delete document: ", document);
         }
 
         return writeResult.result.n;
@@ -211,8 +214,8 @@ var GenericRepository = function () {
   return GenericRepository;
 }();
 
-function getGenericRepoIns(config) {
-  protectedGenericRepoIns = protectedGenericRepoIns || new GenericRepository(config);
+function getGenericRepoIns(config, logger) {
+  protectedGenericRepoIns = protectedGenericRepoIns || new GenericRepository(config, logger);
   return protectedGenericRepoIns;
 }
 

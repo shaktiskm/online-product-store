@@ -15,9 +15,9 @@ function setupValidator(returns) {
   return validate;
 }
 
-describe("The generic validator unit tests -->", () => {
-  describe("The generic validator constructor", () => {
-    describe("when it's been executed", () => {
+describe("******** The generic validator unit tests ********", () => {
+  describe("******** The generic validator constructor ********", () => {
+    describe("******** when it's been executed ********", () => {
 
       it("should deploy a static member called \"schemaValidator\"", () => {
         expect(Boolean(GenericValidator.schemaValidator)).to.be.true;
@@ -26,8 +26,8 @@ describe("The generic validator unit tests -->", () => {
     });
   });
 
-  describe("when \"schemaValidation\" method of generic validator is called", () => {
-    describe("when it's executed", () => {
+  describe("******** when \"schemaValidation\" method of generic validator is called ********", () => {
+    describe("******** when it's executed ********", () => {
       let validate,
         expectedError,
         genericValidator,

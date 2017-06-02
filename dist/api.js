@@ -10,7 +10,8 @@ var express = require("express"),
     mwErrorHandler = require("./middleware_services/mwErrorHandler"),
     mwAddRequestId = require("./middleware_services/mwAddRequestId"),
     mwGenerateUserToken = require("./middleware_services/mwGenerateUserToken"),
-    productRouter = require("./endpoints/product");
+    productRouter = require("./endpoints/product"),
+    log = require("./util/ApiLogger");
 
 var NODE_ENV = process.env.NODE_ENV,
     nodeEnv = NODE_ENV || "local",
@@ -18,13 +19,15 @@ var NODE_ENV = process.env.NODE_ENV,
     urlPrefix = config.urlPrefix,
     app = express(),
     environmentVariables = require("../config/environmentVariables"),
-    firstLevelAuthTest = nodeEnv === "local" ? require("../test/dist/endpoints/helpers/firstLevelAuth/router") : null;
+    firstLevelAuthTest = nodeEnv === "local" || nodeEnv === "test" ? require("../test/dist/endpoints/helpers/firstLevelAuth/router") : null;
 
 // Checks the required enviro// Defines top middleware and routesnment variables
 // Logs the missing environment variables and exit the application
 if (config.environmentVariableChecker.isEnabled) {
   checkEnvironmentVariables(environmentVariables);
 }
+
+log.info("shdbfbdb");
 
 // set the relevant config app wise
 app.set("port", config.http.port);
@@ -53,7 +56,7 @@ app.use(mwAuthenticateRequest);
 // Simple Product Add, Delete, Edit, Search Routes
 app.use("/products", productRouter);
 
-if (nodeEnv === "local") {
+if (nodeEnv === "local" || nodeEnv === "test") {
   app.use(urlPrefix + "/first-level-auth-test", firstLevelAuthTest);
 }
 
@@ -69,7 +72,7 @@ app.use(methodOverride);
 app.use(mwErrorHandler);
 
 app.listen(app.get("port"), function () {
-  console.log("Server is listening on port --> " + app.get("port"));
+  log.info("Server is listening on port --> " + app.get("port"));
 });
 
 module.exports = app;

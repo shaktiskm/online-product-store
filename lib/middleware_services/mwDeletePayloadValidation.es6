@@ -1,9 +1,10 @@
-const ApiError = require("../util/apiError");
+const ApiError = require("../util/apiError"),
+  log = require("../util/ApiLogger");
 
 function mwDeletePayloadValidation(req, res, next) {
   if ((req.body !== null) && (Object.keys(req.body).length > 0)) {
 
-    console.log("mwDeletePayloadValidation()//Payload is not allowed for deletion");
+    log.error("mwDeletePayloadValidation()//Payload is not allowed for deletion");
     let apiErr = new ApiError(req.id, 400, "BadRequest", "Cannot have payload in delete request", "");
 
     return next(apiErr);
@@ -11,7 +12,7 @@ function mwDeletePayloadValidation(req, res, next) {
   }
   // Set body to undefined
   req.body = undefined;
-  console.log("mwDeletePayloadValidation()//Payload validation passed for deletion, set to undefined");
+  log.info("mwDeletePayloadValidation()//Payload validation passed for deletion, set to undefined");
 
   next();
 }
