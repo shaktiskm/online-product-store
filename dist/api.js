@@ -27,8 +27,6 @@ if (config.environmentVariableChecker.isEnabled) {
   checkEnvironmentVariables(environmentVariables);
 }
 
-log.info("shdbfbdb");
-
 // set the relevant config app wise
 app.set("port", config.http.port);
 app.set("secretKey", config.secretKey);

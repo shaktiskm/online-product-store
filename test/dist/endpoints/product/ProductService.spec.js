@@ -40,12 +40,24 @@ function getUniqueIdServiceMock(uniqueIdMock) {
   };
 }
 
-function getService(dbService, genericValidator, uniqueIdService) {
+function getLoggerMock() {
+  return {
+    info: function info() {},
+    error: function error() {},
+    debug: function debug() {},
+    trace: function trace() {},
+    warn: function warn() {},
+    fatel: function fatel() {}
+  };
+}
+
+function getService(dbService, genericValidator, uniqueIdService, logger) {
   var dbServiceMock = dbService || getGenericRepositoryMock(),
       genericValidatorMock = genericValidator || getGenericValidatorMock(),
-      uniqueIdServiceMock = uniqueIdService || getUniqueIdServiceMock();
+      uniqueIdServiceMock = uniqueIdService || getUniqueIdServiceMock(),
+      loggerMock = logger || getLoggerMock();
 
-  return new ProductService(dbServiceMock, genericValidatorMock, uniqueIdServiceMock);
+  return new ProductService(dbServiceMock, genericValidatorMock, uniqueIdServiceMock, loggerMock);
 }
 
 function MockedResponse() {
