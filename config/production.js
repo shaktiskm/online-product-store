@@ -7,7 +7,7 @@ var environmentVariables = require("./environmentVariables"),
     "http": {
       "protocol": "http",
       "domain": "127.0.0.1",
-      "port": environmentVariables.STORE_PORT
+      "port": process.env.PORT
     },
     "appName": "online-product-store",
     "logger": {
@@ -19,7 +19,7 @@ var environmentVariables = require("./environmentVariables"),
         },
         {
           "level": "error",
-          "path": "/var/log/online-store-error.log"
+          "path": "./online-store-error.log"
         }
       ]
     },
